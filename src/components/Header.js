@@ -1,23 +1,32 @@
-import React from 'react'
+import React from "react";
 
-export default function Header() {
-
-	fetch("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5", {
-		method: 'POST',
-		header: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
-		// body: JSON.stringify()
-	})
-		.then(function (resp) { return resp.json() })
-		.then(function (data) {
-			// console.log(data)
-		})
-
+export default function Header(props) {
+	const { currencies } = props;
 
 	return (
-		<div>
+		<header>
+			<h2 style={{ textAlign: "center" }}>Курс Валют</h2>
+			{currencies.length ? (
+				<div className="exchange">
+					<div>Покупка</div>
+					<div></div>
+					<div>Продажа</div>
 
-		</div>
-	)
+					{currencies.map((currency) => (
+						<React.Fragment key={currency.ccy}>
+							<div className="exchange__value">
+								{Number(currency.buy).toFixed(2)}
+							</div>
+							<div className="exchange__currency">{currency.ccy}</div>
+							<div className="exchange__value">
+								{Number(currency.sale).toFixed(2)}
+							</div>
+						</React.Fragment>
+					))}
+				</div>
+			) : (
+				<h3 style={{ textAlign: "center" }}>Загружаем</h3>
+			)}
+		</header>
+	);
 }

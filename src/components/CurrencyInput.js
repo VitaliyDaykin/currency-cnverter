@@ -1,22 +1,17 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react'
+import useCurrency from '../hooks/useCurrency'
 
 export default function CurrencyInput(props) {
+	const currencies = useCurrency();
+	console.log(currencies);
 
-	CurrencyInput.propTypes = {
-		amout: PropTypes.number.isRequired,
-		currency: PropTypes.string.isRequired,
-		currencies: PropTypes.array,
-	}
 
 	return (
 		<div>
-			<input type="text" defaultValue={props.amout} />
-			<select defaultValue={props.currency}>
-				{props.currencies.map((currency => (
-					<option defaultValue={currency}>{currency}</option>
-				)))}
 
+			<input type="text" defaultValue={props.amout} />
+			<select defaultValue={1}>
+				<option defaultValue={'UAH'}>{'UAH'}</option>
 			</select>
 		</div>
 	)

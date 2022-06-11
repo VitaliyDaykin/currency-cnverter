@@ -1,32 +1,20 @@
 import CurrencyInput from "./components/CurrencyInput";
 import Header from "./components/Header";
-import { useState, useEffect } from 'react';
-import axios from "axios";
+import useCurrency from './hooks/useCurrency'
+
 
 
 function App() {
+	const currencies = useCurrency();
 
-	const [amount1, setAmount1] = useState(1);
-	const [amount2, setAmount2] = useState(1);
-	const [currency1, setCurrency1] = useState('USD');
-	const [currency2, setCurrency2] = useState('USD');
-	const [retes, setRetes] = useState([]);
-
-	useEffect(() => {
-		axios.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
-			.then(response => {
-				setRetes(response.data.retes)
-				console.log(response.data);
-
-			})
-	}, [])
 
 	return (
-		<>
-			<Header />
-			<CurrencyInput currencies={[retes]} amount={amount1} currency={currency1} />
-			<CurrencyInput currencies={[retes]} amount={amount2} currency={currency2} />
-		</>
+		<div className="app">
+			<Header currencies={currencies} />
+			<h2 style={{ textAlign: "center" }}>Конвертер Валют</h2>
+			<CurrencyInput currencies={'UAH'} amount={1} currency={1} />
+			<CurrencyInput currencies={['UAH']} amount={1} currency={1} />
+		</div>
 	);
 }
 
