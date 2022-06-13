@@ -1,22 +1,30 @@
-import React, { useState, useEffect } from "react";
+// import { object } from "prop-types";
+import { useState, useEffect } from "react";
 
 
 export default function useCurrency() {
 	const [currency, setCurrency] = useState([]);
 
 	useEffect(() => {
-		const url = `https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5`;
+		fetch("https://api.apilayer.com/fixer/latest?symbols=EUR%2CUSD%2CUAH&base=UAH", {
+			method: 'GET', // *GET, POST, PUT, DELETE, etc.
+			headers: {
+				'apikey': "vKC9sp5Ma0LNqytXuiKisd9RbC7vLPFJ"
+			}
+		})
 
-		fetch(url)
 			.then((response) => response.json())
-			.then((data) => setCurrency(data));
-
+			.then((data) => setCurrency([data.base, ...Object.keys(data.rates)]));
 
 	}, []);
 
-	return [
-		...currency.filter((cur) => cur.base_ccy === "UAH"),
-		{ ccy: "UAH", base_ccy: "UAH", buy: "1", sale: "1" }
-	];
+
+
+
+
+	return <>
+
+	</>
+
 
 }

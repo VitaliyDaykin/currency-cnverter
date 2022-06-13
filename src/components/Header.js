@@ -3,6 +3,7 @@ import React from "react";
 export default function Header(props) {
 	const { currencies } = props;
 
+
 	return (
 		<header>
 			<h2 style={{ textAlign: "center" }}>Курс Валют</h2>

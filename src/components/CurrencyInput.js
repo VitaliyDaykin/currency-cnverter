@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
-import useCurrency from '../hooks/useCurrency'
+
 
 export default function CurrencyInput(props) {
-	const currencies = useCurrency();
-	console.log(currencies);
+	const { currencyOption, selectedCurrency, onChangeCurrency, amount, onChangeAmount } = props
 
 
 	return (
 		<div>
 
-			<input type="text" defaultValue={props.amout} />
-			<select defaultValue={1}>
-				<option defaultValue={'UAH'}>{'UAH'}</option>
+			<input type="text" value={amount} onChange={onChangeAmount} />
+			<select defaultValue={selectedCurrency} onChange={onChangeCurrency}>
+				{currencyOption.map((option, i) => (
+					<option key={i} defaultValue={option}>{option}</option>
+				))}
+
 			</select>
 		</div>
 	)
 }
+
+
