@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 
 export default function Header(props) {
-	const { currencies } = props;
 
+	const { currencies } = props;
+	console.log(props);
 
 	return (
 		<header>
-			<h2 style={{ textAlign: "center" }}>Курс Валют</h2>
+			{/* <h2 style={{ textAlign: "center" }}>Курс Валют</h2>
 			{currencies.length ? (
 				<div className="exchange">
 					<div>Покупка</div>
@@ -27,7 +29,7 @@ export default function Header(props) {
 				</div>
 			) : (
 				<h3 style={{ textAlign: "center" }}>Загружаем</h3>
-			)}
+			)} */}
 		</header>
 	);
 }

@@ -1,82 +1,87 @@
-import CurrencyInput from "./components/CurrencyInput";
-import Header from "./components/Header";
-import useCurrency from './hooks/useCurrency'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
+import CurrencyInput from './components/CurrencyInput';
+import Header from './components/Header';
 
+
+const BASE_URL = 'https://cdn.cur.su/api/nbu.json'
 
 function App() {
-	const BASE_URL = "https://openexchangerates.org/api/latest.json?app_id=bdfbdbe024a049b3898746d7c5b15444&symbols=EUR%2CUSD%2CUAH";
+	const [currencyOptions, setCurrencyOptions] = useState([])
+	const [fromCurrency, setFromCurrency] = useState()
+	const [toCurrency, setToCurrency] = useState()
+	const [exchangeRate, setExchangeRate] = useState()
+	const [amount, setAmount] = useState(1)
+	const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
+	const [exchangeRateBoard, setExchangeRateBoard] = useState()
 
-	const [currencyOption, setCurrencyOption] = useState([]);
-	const [formCurrency, setFormCurrency] = useState();
-	const [toCurrency, setToCurrency] = useState();
-	const [exchangeRate, setEexchangeRate] = useState();
-	const [amount, setAmount] = useState(1);
-	const [amountInFormCurrency, setAmountInFormCurrency] = useState(true);
+
 
 	let toAmount, fromAmount
-	if (amountInFormCurrency) {
+	if (amountInFromCurrency) {
 		fromAmount = amount
 		toAmount = amount * exchangeRate
 	} else {
-		toAmount = amount
+		toAmount = 'amount'
 		fromAmount = amount / exchangeRate
 	}
 
-
-
 	useEffect(() => {
-
 		fetch(BASE_URL)
-			.then((response) => response.json())
-			.then((data) => {
+			.then(res => res.json())
+			.then(data => {
+				const defaultCurrency = Object.keys(data.rates).includes("UAH") ? "UAH" : Object.keys(data.rates)[1];
 				const firstCurrency = Object.keys(data.rates)[0]
-				setCurrencyOption([data.base, ...Object.keys(data.rates)]);
-				setFormCurrency(data.base)
-				setToCurrency(firstCurrency)
-				setEexchangeRate(data.rates[firstCurrency])
+				setCurrencyOptions([data.base, ...Object.keys(data.rates)])
+				setFromCurrency(data.base)
+				setToCurrency(defaultCurrency)
+				setExchangeRate(data.rates[firstCurrency])
+				setExchangeRateBoard(data.rates)
+
+
 			})
-	}, []);
+	}, [])
 
 	useEffect(() => {
-		if (formCurrency != null && toCurrency != null) {
-			fetch(`${BASE_URL}?base=${formCurrency}&symbols=${toCurrency}`)
-				.then((response) => response.json())
-				.then((data) => { setEexchangeRate(data.rates[toCurrency]) })
+		if (fromCurrency != null && toCurrency != null) {
+			fetch(`${BASE_URL}?base=${fromCurrency}&symbols=${toCurrency}`)
+				.then(res => res.json())
+				.then(data => setExchangeRate(data.rates[toCurrency]))
 		}
+	}, [fromCurrency, toCurrency])
 
-	}, [toCurrency, formCurrency]);
-
-	function handeleFormAmountChange(e) {
+	function handleFromAmountChange(e) {
 		setAmount(e.target.value)
-		setAmountInFormCurrency(true)
+		setAmountInFromCurrency(true)
 	}
 
-	function handeleToAmountChange(e) {
+	function handleToAmountChange(e) {
 		setAmount(e.target.value)
-		setAmountInFormCurrency(false)
+		setAmountInFromCurrency(false)
 	}
 
 	return (
-		<div className="app">
-			{/* <Header currencies={currencies} /> */}
-			<h2 style={{ textAlign: "center" }}>Конвертер Валют</h2>
-
-			<CurrencyInput
-				currencyOption={currencyOption}
-				selectedCurrency={toCurrency}
-				onChangeCurrency={e => setFormCurrency(e.target.value)}
-				onChangeAmount={handeleFormAmountChange}
-				amount={fromAmount}
-			/>
-			<CurrencyInput
-				currencyOption={currencyOption}
-				selectedCurrency={toCurrency}
-				onChangeCurrency={e => setToCurrency(e.target.value)}
-				onChangeAmount={handeleToAmountChange}
-				amount={toAmount}
-			/>
-		</div>
+		<>
+			<Header />
+			<div className="app">
+				<Header exchangeRateBoard={exchangeRateBoard} />
+				<h2 style={{ textAlign: "center" }}>Конвертер Валют</h2>
+				<CurrencyInput
+					currencyOptions={currencyOptions}
+					selectedCurrency={fromCurrency}
+					onChangeCurrency={e => setFromCurrency(e.target.value)}
+					onChangeAmount={handleFromAmountChange}
+					amount={fromAmount}
+				/>
+				<div className="equals">=</div>
+				<CurrencyInput
+					currencyOptions={currencyOptions}
+					selectedCurrency={toCurrency}
+					onChangeCurrency={e => setToCurrency(e.target.value)}
+					onChangeAmount={handleToAmountChange}
+					amount={toAmount}
+				/>
+			</div>
+		</>
 	);
 }
 

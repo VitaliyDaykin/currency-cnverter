@@ -6,25 +6,16 @@ export default function useCurrency() {
 	const [currency, setCurrency] = useState([]);
 
 	useEffect(() => {
-		fetch("https://api.apilayer.com/fixer/latest?symbols=EUR%2CUSD%2CUAH&base=UAH", {
-			method: 'GET', // *GET, POST, PUT, DELETE, etc.
-			headers: {
-				'apikey': "vKC9sp5Ma0LNqytXuiKisd9RbC7vLPFJ"
-			}
-		})
+		const url = `https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5`;
 
+		fetch(url)
 			.then((response) => response.json())
-			.then((data) => setCurrency([data.base, ...Object.keys(data.rates)]));
-
+			.then((data) => setCurrency(data));
 	}, []);
 
-
-
-
-
-	return <>
-
-	</>
+	return [
+		...currency.filter((cur) => cur.base_ccy === "UAH")
+	];
 
 
 }
