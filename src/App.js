@@ -21,7 +21,7 @@ function App() {
 		fromAmount = amount
 		toAmount = amount * exchangeRate
 	} else {
-		toAmount = 'amount'
+		toAmount = amount
 		fromAmount = amount / exchangeRate
 	}
 
@@ -61,10 +61,11 @@ function App() {
 
 	return (
 		<>
-			<Header />
+
 			<div className="app">
 				<Header exchangeRateBoard={exchangeRateBoard} />
-				<h2 style={{ textAlign: "center" }}>Конвертер Валют</h2>
+				<h2 style={{ textAlign: "center", marginBottom: 0 }}>Конвертер Валют</h2>
+				<p style={{ textAlign: "center", marginTop: 0 }}>Банк</p>
 				<CurrencyInput
 					currencyOptions={currencyOptions}
 					selectedCurrency={fromCurrency}
